@@ -22,7 +22,7 @@ class Feature_extractor_unshare(nn.Module):
             if ic == oc:
                 feature_extractor.append(ResConv2d(ic,oc,kernel_size=3,stride=1,padding=dilation,dilation=dilation, norm=norm))
             else:
-                feature_extractor.append(ConvLeakyRelu2d(ic,oc,kernel_size=3,stride=1,padding=dilation,dilation=dilation, norm=norm))
+                feature_extractor.append(Conv2d(ic,oc,kernel_size=3,stride=1,padding=dilation,dilation=dilation, norm=norm))
             ic = oc
             if i%2==1 and i<depth-1:
                 oc *= 2
@@ -30,6 +30,11 @@ class Feature_extractor_unshare(nn.Module):
         self.oc = oc
         self.dilation = dilation
         self.layers = feature_extractor
+
+    def forward(self,x):
+        for i,layer in enumerate(self.layers):
+            x = layer(x)
+        return x ,self.ic , self.oc
 
 class SpatialTransformer(nn.Module):
     def __init__(self, h,w, gpu_use, mode='bilinear'):
