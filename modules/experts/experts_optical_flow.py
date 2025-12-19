@@ -200,8 +200,10 @@ class DenseMatcher(nn.Module):
         feat11,feat12 = feat1[0:b],feat1[b:]
         feat21,feat22 = feat2[0:b],feat2[b:]
         feat31,feat32 = feat3[0:b],feat3[b:]
+        #金字塔结构(特征提取器)
         disp_12 = None
         disp_21 = None
+        #下面是形变场的计算(可以在这里引入moe专家系统来选择进行不同专家的加权求和)
         if type == 'bi':
             disp_12,disp_12_down4,disp_12_down8 = self.match(feat11,feat12,feat21,feat22,feat31,feat32)
             disp_21,disp_21_down4,disp_21_down8 = self.match(feat12,feat11,feat22,feat21,feat32,feat31)
